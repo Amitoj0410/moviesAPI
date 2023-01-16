@@ -1,9 +1,12 @@
 // Setup
 const express = require('express');
-var cors = require('cors');
-require('dotenv').config()
+const cors = require('cors');
+require('dotenv').config();
+const MoviesDB = require("./modules/moviesDB.js");
+const db = new MoviesDB();
 const path = require('path');
 const bodyParser = require('body-parser');
+const { default: mongoose } = require('mongoose');
 const app = express();
 const HTTP_PORT = process.env.PORT || 8080;
 // Or use some other port number that you like better
@@ -14,48 +17,43 @@ app.use(bodyParser.json());
 app.use(cors())
 
 app.use(express.json())
-// Deliver the app's home page to browser clients
+
 app.get('/', (req, res) => {
-//   res.sendFile(path.join(__dirname, '/index.html'));
     res.json({message : "API Listening"});
 });
 
-// Get all
-app.get('/api/items', (req, res) => {
-  res.json({ message: 'fetch all items' });
+app.post('/api/movies', (req, res) => {
+    // MUST return HTTP 201
+    db.addNewMovie(req.body)
+    .then(()=>{
+        res.status(201).send("New Movie Added Successfully");
+    })
+    .catch((err)=>{
+        res.status(500).send(`Movie Wasnt added successfully : ` + {err});
+    })
 });
 
-// Get one
-app.get('/api/items/:itemId', (req, res) => {
-  res.json({ message: `get user with identifier: ${req.params.id}` });
-});
-
-// Add new
-// This route expects a JSON object in the body, e.g. { "firstName": "Peter", "lastName": "McIntyre" }
-app.post('/api/items', (req, res) => {
-  // MUST return HTTP 201
-  res.status(201).json({ message: `added a new item: ${req.body.firstName} ${req.body.lastName}` });
-});
-
-// Edit existing
-// This route expects a JSON object in the body, e.g. { "id": 123, "firstName": "Peter", "lastName": "McIntyre" }
-app.put('/api/items/:id', (req, res) => {
-  res.json({
-    message: `updated item with identifier: ${req.params.id} to ${req.body.firstName} ${req.body.lastName}`,
-  });
-});
-
-// Delete item
-app.delete('/api/items/:id', (req, res) => {
-  res.status(200).json({ message: `deleted user with identifier: ${req.params.id}` });
-});
-
-// Resource not found (this should be at the end)
-app.use((req, res) => {
-  res.status(404).send('Resource not found');
+app.get('/api/movies', (req, res) => {
+    db.getAllMovies(req.query.page, req.query.perPage, req.query.title)
+    .then(()=>{
+        res.status(201).send("Returned the requested movies");
+    })
+    .catch((err)=>{
+        res.status(500).send(`Unable to return movies :` + {err});
+    })
 });
 
 // Tell the app to start listening for requests
-app.listen(HTTP_PORT, () => {
-  console.log('Ready to handle requests on port ' + HTTP_PORT);
+db.initialize(process.env.MONGODB_CONN_STRING).then(()=>{
+    app.listen(HTTP_PORT, ()=>{
+        console.log(`server listening on: ${HTTP_PORT}`);
+        //console.log(process.env.MONGODB_CONN_STRING);
+    });
+}).catch((err)=>{
+    console.log(err);
 });
+
+// app.listen(HTTP_PORT, () => {
+//     console.log('Ready to handle requests on port ' + HTTP_PORT);
+//     console.log(process.env.MONGODB_CONN_STRING);
+// });
