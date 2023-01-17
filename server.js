@@ -26,7 +26,7 @@ app.post('/api/movies', (req, res) => {
     // MUST return HTTP 201
     db.addNewMovie(req.body)
     .then(()=>{
-        res.status(201).send("New Movie Added Successfully");
+        res.status(200).send("New Movie Added Successfully");
     })
     .catch((err)=>{
         res.status(500).send(`Movie Wasnt added successfully : ` + {err});
@@ -42,7 +42,7 @@ app.get('/api/movies', (req, res) => {
         }
         else
         {
-            res.status(201).json("Returned the requested movies by page, perPage, title : " + data);
+            res.status(200).json("Returned the requested movies by page, perPage, title : " + data);
         }
     })
     .catch((err)=>{
@@ -53,7 +53,7 @@ app.get('/api/movies', (req, res) => {
 app.get('/api/movies/:_id', (req, res) => {
     db.getMovieById(req.params._id)
     .then((data)=>{
-        res.status(201).json("Returned the requested movie by id : " + data);
+        res.status(200).json("Returned the requested movie by id : " + data);
     })
     .catch((err)=>{
         res.status(500).send(`Unable to return movie by requested id : ` + {err});
@@ -63,7 +63,7 @@ app.get('/api/movies/:_id', (req, res) => {
 app.put('/api/movies/:_id', (req, res) => {
     db.updateMovieById(req.body, req.params._id)
     .then(()=>{
-        res.status(201).send(`Updated the requested movie of id : ` + req.params._id);
+        res.status(200).send(`Updated the requested movie of id : ` + req.params._id);
     })
     .catch((err)=>{
         res.status(500).send(`Unable to update movie by requested id : ` + {err});
@@ -74,7 +74,7 @@ app.put('/api/movies/:_id', (req, res) => {
 app.delete('/api/movies/:_id', (req, res) => {
     db.deleteMovieById(req.params._id)
     .then(()=>{
-        res.status(201).send(`Deleted the requested movie of id : ` + req.params._id);
+        res.status(200).send(`Deleted the requested movie of id : ` + req.params._id);
     })
     .catch((err)=>{
         res.status(500).send(`Unable to delete movie by requested id : ` + {err});
