@@ -24,18 +24,15 @@ app.get('/', (req, res) => {
 
 app.post('/api/movies', (req, res) => {
     // MUST return HTTP 201
-    db.addNewMovie(req.body)
-    .then(()=>{
+    db.addNewMovie(req.body).then(()=>{
         res.status(200).send("New Movie Added Successfully");
-    })
-    .catch((err)=>{
+    }).catch((err)=>{
         res.status(500).send(`Movie Wasnt added successfully : ` + {err});
     })
 });
 
 app.get('/api/movies', (req, res) => {
-    db.getAllMovies(req.query.page, req.query.perPage, req.query.title)
-    .then((data)=>{
+    db.getAllMovies(req.query.page, req.query.perPage, req.query.title).then((data)=>{
         if(data.length == 0)
         {
             res.status(404).json({error : "Unable to find requested movie"});
@@ -44,28 +41,23 @@ app.get('/api/movies', (req, res) => {
         {
             res.status(200).json("Returned the requested movies by page, perPage, title : " + data);
         }
-    })
-    .catch((err)=>{
+    }).catch((err)=>{
         res.status(500).send(`Unable to return movies : ` + {err});
     })
 });
 
 app.get('/api/movies/:_id', (req, res) => {
-    db.getMovieById(req.params._id)
-    .then((data)=>{
+    db.getMovieById(req.params._id).then((data)=>{
         res.status(200).json("Returned the requested movie by id : " + data);
-    })
-    .catch((err)=>{
+    }).catch((err)=>{
         res.status(500).send(`Unable to return movie by requested id : ` + {err});
     })
 });
 
 app.put('/api/movies/:_id', (req, res) => {
-    db.updateMovieById(req.body, req.params._id)
-    .then(()=>{
+    db.updateMovieById(req.body, req.params._id).then(()=>{
         res.status(200).send(`Updated the requested movie of id : ` + req.params._id);
-    })
-    .catch((err)=>{
+    }).catch((err)=>{
         res.status(500).send(`Unable to update movie by requested id : ` + {err});
     })
 });
