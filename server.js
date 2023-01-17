@@ -35,11 +35,49 @@ app.post('/api/movies', (req, res) => {
 
 app.get('/api/movies', (req, res) => {
     db.getAllMovies(req.query.page, req.query.perPage, req.query.title)
-    .then(()=>{
-        res.status(201).send("Returned the requested movies");
+    .then((data)=>{
+        if(data.length == 0)
+        {
+            res.status(404).json({error : "Unable to find requested movie"});
+        }
+        else
+        {
+            res.status(201).json("Returned the requested movies by page, perPage, title : " + data);
+        }
     })
     .catch((err)=>{
-        res.status(500).send(`Unable to return movies :` + {err});
+        res.status(500).send(`Unable to return movies : ` + {err});
+    })
+});
+
+app.get('/api/movies/:_id', (req, res) => {
+    db.getMovieById(req.params._id)
+    .then((data)=>{
+        res.status(201).json("Returned the requested movie by id : " + data);
+    })
+    .catch((err)=>{
+        res.status(500).send(`Unable to return movie by requested id : ` + {err});
+    })
+});
+
+app.put('/api/movies/:_id', (req, res) => {
+    db.updateMovieById(req.body, req.params._id)
+    .then(()=>{
+        res.status(201).send(`Updated the requested movie of id : ` + req.params._id);
+    })
+    .catch((err)=>{
+        res.status(500).send(`Unable to update movie by requested id : ` + {err});
+    })
+});
+
+
+app.delete('/api/movies/:_id', (req, res) => {
+    db.deleteMovieById(req.params._id)
+    .then(()=>{
+        res.status(201).send(`Deleted the requested movie of id : ` + req.params._id);
+    })
+    .catch((err)=>{
+        res.status(500).send(`Unable to delete movie by requested id : ` + {err});
     })
 });
 
@@ -52,8 +90,3 @@ db.initialize(process.env.MONGODB_CONN_STRING).then(()=>{
 }).catch((err)=>{
     console.log(err);
 });
-
-// app.listen(HTTP_PORT, () => {
-//     console.log('Ready to handle requests on port ' + HTTP_PORT);
-//     console.log(process.env.MONGODB_CONN_STRING);
-// });
