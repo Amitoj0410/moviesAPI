@@ -23,7 +23,6 @@ app.get('/', (req, res) => {
 });
 
 app.post('/api/movies', (req, res) => {
-    // MUST return HTTP 201
     db.addNewMovie(req.body).then(()=>{
         res.status(200).send("New Movie Added Successfully");
     }).catch((err)=>{
@@ -42,7 +41,7 @@ app.get('/api/movies', (req, res) => {
             res.status(200).json("Returned the requested movies by page, perPage, title : " + data);
         }
     }).catch((err)=>{
-        res.status(500).send(`Unable to return movies : ` + {err});
+        res.status(500).send('Unable to return movies : ' + {err});
     })
 });
 
