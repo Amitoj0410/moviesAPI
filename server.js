@@ -1,4 +1,16 @@
-// Setup
+/*********************************************************************************
+*  WEB422 – Assignment 1
+*  I declare that this assignment is my own work in accordance with Seneca  Academic Policy.  
+*  No part of this assignment has been copied manually or electronically from any other source
+*  (including web sites) or distributed to other students.
+* 
+*  Name: Amitoj Singh    Student ID: 159347210   Date: 20/01/2023 (dd/mm/yyyy)
+*  Cyclic Link: https://puce-panicky-mackerel.cyclic.app
+*
+********************************************************************************/ 
+
+
+
 const express = require('express');
 const cors = require('cors');
 require('dotenv').config();
