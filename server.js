@@ -50,7 +50,7 @@ app.get('/api/movies', (req, res) => {
         }
         else
         {
-            res.status(200).json("Returned the requested movies by page, perPage, title : " + data);
+            res.status(200).json(data);
         }
     }).catch((err)=>{
         res.status(500).send('Unable to return movies : ' + {err});
