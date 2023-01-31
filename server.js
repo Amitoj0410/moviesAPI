@@ -59,7 +59,7 @@ app.get('/api/movies', (req, res) => {
 
 app.get('/api/movies/:_id', (req, res) => {
     db.getMovieById(req.params._id).then((data)=>{
-        res.status(200).json("Returned the requested movie by id : " + data);
+        res.status(200).json(data);
     }).catch((err)=>{
         res.status(500).send(`Unable to return movie by requested id : ` + {err});
     })
